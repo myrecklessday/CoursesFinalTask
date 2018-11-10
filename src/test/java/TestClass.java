@@ -1,11 +1,13 @@
 import base.MyAssert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import pages.*;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class TestClass {
@@ -17,6 +19,7 @@ public class TestClass {
     private CreateAnAccountPage createAnAccountPage;
     private MyAccountPage myAccountPage;
     private MyAssert myAssert;
+    private SearchResultsPage searchResultsPage;
 
     @BeforeClass
     public void start2() {
@@ -28,6 +31,7 @@ public class TestClass {
         createAnAccountPage = new CreateAnAccountPage(driver);
         myAccountPage = new MyAccountPage(driver);
         myAssert = new MyAssert(driver);
+        searchResultsPage = new SearchResultsPage(driver);
 
     }
 
@@ -41,6 +45,9 @@ public class TestClass {
         driver.quit();
     }
 
+    /**
+     * E-1 Verify that contact us form sends successfully
+     */
     @Test(dataProvider = "getSubjectHeading")
     public void sendContactUsFormSuccess(String subject) {
         mainPage.goToContactUsPage();
@@ -51,14 +58,21 @@ public class TestClass {
 
     }
 
+    /**
+     * E-2 Verify that error message appears if Message area is empty
+     */
     @Test(dataProvider = "getSubjectHeading")
     public void sendContactUsFormWithEmptyMessage(String subject){
         mainPage.goToContactUsPage();
         contactUsPage.fillContactUsForm(subject, "abcde", "");
         String message = driver.findElement(By.xpath("//div[contains(@class, 'alert-danger')]")).getText();
-        myAssert.assertTrue(message.contains("The message cannot be blank."), "Displayed message should warn about empty message field");
+        myAssert.assertTrue(message.contains("The message cannot be blank."),
+                "Displayed message should warn about empty message field");
     }
 
+    /**
+     * E-3 Verify the ability to register
+     */
     @Test
     public void register(){
         mainPage.goToSignInPage();
@@ -76,15 +90,32 @@ public class TestClass {
         int i = 0;
     }
 
+    /**
+     * E-4 Verify the ability to search items
+     */
+    @Test(dataProvider = "searchItemName")
+    public void searchItems(String item){
+        mainPage.search(item);
+        Assert.assertTrue(searchResultsPage.isFoundItemsTitleCorrect(item),"Search results should contain searched item");
+    }
+
 
     @DataProvider
-    public Object[][] getSubjectHeading(){
+    public Object[][] getSubjectHeading() {
         return new Object[][]{
                 {"Customer service"},
                 {"Webmaster"}
         };
     }
 
+    @DataProvider
+    public Object[][] searchItemName() {
+        return new Object[][]{
+                {"blouse"},
+                {"shirt"},
+                {"dress"}
+        };
+    }
 
 }
 
