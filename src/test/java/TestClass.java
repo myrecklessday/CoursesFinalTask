@@ -20,6 +20,7 @@ public class TestClass {
     private MyAccountPage myAccountPage;
     private MyAssert myAssert;
     private SearchResultsPage searchResultsPage;
+    private ShoppingCartPage shoppingCartPage;
 
     @BeforeClass
     public void start2() {
@@ -32,6 +33,7 @@ public class TestClass {
         myAccountPage = new MyAccountPage(driver);
         myAssert = new MyAssert(driver);
         searchResultsPage = new SearchResultsPage(driver);
+        shoppingCartPage = new ShoppingCartPage(driver);
 
     }
 
@@ -54,7 +56,8 @@ public class TestClass {
         contactUsPage.fillContactUsForm(subject, "abcde", "Hello! Got the order, thanks!");
 
         String message = driver.findElement(By.xpath("//p[contains(@class, 'alert-success')]")).getText();
-        myAssert.assertTrue(message.contentEquals("Your message has been successfully sent to our team."), "Displayed message should be successful");
+        myAssert.assertTrue(message.contentEquals("Your message has been successfully sent to our team."),
+                "Displayed message should be successful");
 
     }
 
@@ -86,8 +89,6 @@ public class TestClass {
         myAssert.assertTrue(driver.getTitle().contains("My account"), "Title should contain 'My account' text");
 
         myAccountPage.signOut();
-
-        int i = 0;
     }
 
     /**
@@ -97,6 +98,25 @@ public class TestClass {
     public void searchItems(String item){
         mainPage.search(item);
         Assert.assertTrue(searchResultsPage.isFoundItemsTitleCorrect(item),"Search results should contain searched item");
+    }
+
+    /**
+     * E-5 Verify the ability to add and delete items from cart
+     */
+    @Test(dataProvider = "searchItemName")
+    public void addDeleteItemsFromCart(String item){
+        mainPage.search(item);
+        String itemTitleInSearchResults = searchResultsPage.getFirstItemTitle();
+        searchResultsPage.addToCartFirstFoundItem();
+        searchResultsPage.goToCart();
+        String itemTitleInCart = shoppingCartPage.getFirstItemTitleInCart();
+        Assert.assertEquals(itemTitleInCart, itemTitleInSearchResults, "Item's title in cart should be same as added");
+
+        shoppingCartPage.deleteFirstItem();
+        String warningMessage = shoppingCartPage.getWarningMessage();
+        Assert.assertEquals(warningMessage, "Your shopping cart is empty.", "Shopping cart should be" +
+                "empty after item removing");
+
     }
 
 
@@ -111,9 +131,9 @@ public class TestClass {
     @DataProvider
     public Object[][] searchItemName() {
         return new Object[][]{
-                {"blouse"},
+                {"Blouse"},
                 {"shirt"},
-                {"dress"}
+                {"Dress"}
         };
     }
 

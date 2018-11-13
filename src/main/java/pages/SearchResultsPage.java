@@ -6,7 +6,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SearchResultsPage extends PageBase {
@@ -15,15 +14,20 @@ public class SearchResultsPage extends PageBase {
     }
 
     @FindAll({@FindBy(xpath = "//div[contains(@class, 'right-block')]//a[contains(@class, 'product-name')]")})
-    private List <WebElement> foundItems;
+    private List <WebElement> foundItemsTitle;
+
+    @FindAll({@FindBy(xpath = "//a[contains(@title, 'Add to cart')]")})
+    private List <WebElement> addToCartButtons;
+
+    @FindBy(className = "clearfix")
+    private WebElement itemAddedBanner;
+
+    @FindBy(xpath = "//a[contains(@title, 'Proceed to checkout')]")
+    private WebElement proceedToCheckoutButton;
 
     public boolean isFoundItemsTitleCorrect(String searchItem){
-        for (WebElement foundItem: foundItems) {
-            if (foundItem.getAttribute("title").toLowerCase().contains(searchItem)) {
-                System.out.println("Search result that contains 'item': "
-                        .replace("item", searchItem) + foundItem.getAttribute("title"));
-            }
-            else {
+        for (WebElement foundItem: foundItemsTitle) {
+            if (!foundItem.getAttribute("title").toLowerCase().contains(searchItem.toLowerCase())) {
                 System.out.println("Search result that don't contain 'item': "
                         .replace("item", searchItem) + foundItem.getAttribute("title"));
                 return false;
@@ -32,14 +36,29 @@ public class SearchResultsPage extends PageBase {
         return true;
     }
 
-    public void printFoundTitle (String searchItem) {
-        for (WebElement foundItem : foundItems) {
-            if (foundItem.getAttribute("title").toLowerCase().contains(searchItem)) {
-                System.out.println(foundItem.getAttribute("title"));
-            }
-            else {
-                System.out.println("search results incorrect: " + foundItem.getAttribute("title"));
-            }
+    public void addToCartFirstFoundItem(){
+        if (addToCartButtons.size() > 0){
+            WebElement firstFoundAddToCartButton = addToCartButtons.get(0);
+            firstFoundAddToCartButton.click();
+        }
+        else {
+            System.out.println("No items to add to cart!");
         }
     }
+
+    public String getFirstItemTitle(){
+        if (foundItemsTitle.size() > 0){
+            return foundItemsTitle.get(0).getText();
+        }
+        else {
+            System.out.println("No items to get title from");
+        }
+        return "";
+    }
+
+    public void goToCart(){
+        WebElement checkoutButtonWaiter = waitForElementVisible(proceedToCheckoutButton);
+        checkoutButtonWaiter.click();
+    }
+
 }
