@@ -25,6 +25,10 @@ public class SearchResultsPage extends PageBase {
     @FindBy(xpath = "//a[contains(@title, 'Proceed to checkout')]")
     private WebElement proceedToCheckoutButton;
 
+    public boolean isItemFound(){
+        return foundItemsTitle.size() > 0;
+    }
+
     public boolean isFoundItemsTitleCorrect(String searchItem){
         for (WebElement foundItem: foundItemsTitle) {
             if (!foundItem.getAttribute("title").toLowerCase().contains(searchItem.toLowerCase())) {
@@ -36,24 +40,11 @@ public class SearchResultsPage extends PageBase {
         return true;
     }
 
-    public void addToCartFirstFoundItem(){
-        if (addToCartButtons.size() > 0){
+    public String addToCartFirstFoundItem(){
             WebElement firstFoundAddToCartButton = addToCartButtons.get(0);
+            String firstItemTitle = foundItemsTitle.get(0).getText();
             firstFoundAddToCartButton.click();
-        }
-        else {
-            System.out.println("No items to add to cart!");
-        }
-    }
-
-    public String getFirstItemTitle(){
-        if (foundItemsTitle.size() > 0){
-            return foundItemsTitle.get(0).getText();
-        }
-        else {
-            System.out.println("No items to get title from");
-        }
-        return "";
+            return firstItemTitle;
     }
 
     public void goToCart(){

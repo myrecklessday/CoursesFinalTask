@@ -97,6 +97,7 @@ public class TestClass {
     @Test(dataProvider = "searchItemName")
     public void searchItems(String item){
         mainPage.search(item);
+        Assert.assertTrue(searchResultsPage.isItemFound(), "Item should be found");
         Assert.assertTrue(searchResultsPage.isFoundItemsTitleCorrect(item),"Search results should contain searched item");
     }
 
@@ -105,9 +106,10 @@ public class TestClass {
      */
     @Test(dataProvider = "searchItemName")
     public void addDeleteItemsFromCart(String item){
+//        searchItems(item);
         mainPage.search(item);
-        String itemTitleInSearchResults = searchResultsPage.getFirstItemTitle();
-        searchResultsPage.addToCartFirstFoundItem();
+        Assert.assertTrue(searchResultsPage.isItemFound(), "Item should be found");
+        String itemTitleInSearchResults = searchResultsPage.addToCartFirstFoundItem();
         searchResultsPage.goToCart();
         String itemTitleInCart = shoppingCartPage.getFirstItemTitleInCart();
         Assert.assertEquals(itemTitleInCart, itemTitleInSearchResults, "Item's title in cart should be same as added");
@@ -118,6 +120,10 @@ public class TestClass {
                 "empty after item removing");
 
     }
+
+    /**
+     * E-6 Catalog Test
+     */
 
 
     @DataProvider
@@ -131,6 +137,7 @@ public class TestClass {
     @DataProvider
     public Object[][] searchItemName() {
         return new Object[][]{
+                {"jfjf"},
                 {"Blouse"},
                 {"shirt"},
                 {"Dress"}

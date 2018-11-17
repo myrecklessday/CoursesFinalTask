@@ -1,6 +1,7 @@
 package pages;
 
 import base.PageBase;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindAll;
@@ -44,7 +45,13 @@ public class ShoppingCartPage extends PageBase {
     }
 
     public String getWarningMessage(){
-        WebElement warningMessageWaiter = waitForElementVisible(warningMessage);
+        WebElement warningMessageWaiter;
+        try {
+            warningMessageWaiter = waitForElementVisible(warningMessage);
+        }
+        catch (StaleElementReferenceException e){
+            warningMessageWaiter = waitForElementVisible(warningMessage);
+        }
         return warningMessageWaiter.getText();
     }
 }
