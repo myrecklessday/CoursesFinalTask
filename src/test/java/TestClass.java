@@ -21,6 +21,7 @@ public class TestClass {
     private MyAssert myAssert;
     private SearchResultsPage searchResultsPage;
     private ShoppingCartPage shoppingCartPage;
+    private CatalogPage catalogPage;
 
     @BeforeClass
     public void start2() {
@@ -34,6 +35,7 @@ public class TestClass {
         myAssert = new MyAssert(driver);
         searchResultsPage = new SearchResultsPage(driver);
         shoppingCartPage = new ShoppingCartPage(driver);
+        catalogPage = new CatalogPage(driver);
 
     }
 
@@ -124,6 +126,11 @@ public class TestClass {
     /**
      * E-6 Catalog Test
      */
+    @Test(dataProvider = "catalogItemName")
+    public void isChosenItemDisplayedInCatalog(String catalogItem){
+        mainPage.goToSubMenu("Women", catalogItem);
+        Assert.assertTrue(catalogPage.isCatalogItemCorrect(catalogItem), "Correct item should be displayed in catalog");
+    }
 
 
     @DataProvider
@@ -141,6 +148,14 @@ public class TestClass {
                 {"Blouse"},
                 {"shirt"},
                 {"Dress"}
+        };
+    }
+
+    @DataProvider
+    public Object[][] catalogItemName(){
+        return new Object[][]{
+                {"T-shirts"},
+                {"Blouses"}
         };
     }
 

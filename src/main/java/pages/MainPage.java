@@ -1,6 +1,7 @@
 package pages;
 
 import base.PageBase;
+import elements.MainMenu;
 import elements.SearchField;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -22,6 +23,9 @@ public class MainPage extends PageBase {
     @FindBy(id = "searchbox")
     private WebElement searchBoxItem;
 
+    @FindBy(id = "block_top_menu")
+    private WebElement mainMenuBlock;
+
     public void goToContactUsPage(){
         contactUsMenuItem.click();
     }
@@ -34,4 +38,10 @@ public class MainPage extends PageBase {
         SearchField searchField = new SearchField(searchBoxItem);
         searchField.searchItem(item);
     }
+
+    public void goToSubMenu(String mainMenuItem, String subMenuItem){
+        MainMenu mainMenu = new MainMenu(mainMenuBlock, driver);
+        mainMenu.goToSubMenu(mainMenuItem, subMenuItem);
+    }
+
 }
