@@ -24,6 +24,33 @@ public class ShoppingCartPage extends PageBase {
    @FindBy(css = ".alert-warning")
    private WebElement warningMessage;
 
+   @FindBy(css = ".standard-checkout")
+   private WebElement proceedToCheckoutButton;
+
+   @FindBy(id = "email")
+   private WebElement emailSignInField;
+
+   @FindBy(id = "passwd")
+   private WebElement passwordSignInField;
+
+   @FindBy(id = "SubmitLogin")
+   private WebElement signInButton;
+
+   @FindBy(xpath = "//span[text() = 'Proceed to checkout']")
+   private WebElement proceedToShippingButton;
+
+   @FindBy()
+   private WebElement proceedToPaymentButton;
+
+   @FindBy(id = "cgv")
+   private WebElement confirmBox;
+
+   @FindBy(className = "cheque")
+   private WebElement payByCheck;
+
+   @FindBy(xpath = "//span[text() = 'I confirm my order']")
+   private WebElement confirmOrderButton;
+
 
     public String getFirstItemTitleInCart(){
         if (itemsTitleInCart.size() > 0) {
@@ -54,4 +81,30 @@ public class ShoppingCartPage extends PageBase {
         }
         return warningMessageWaiter.getText();
     }
+
+    public void proceedToCheckout(){
+        proceedToCheckoutButton.click();
+    }
+
+    public void signIn(String email, String password){
+        emailSignInField.sendKeys(email);
+        passwordSignInField.sendKeys(password);
+        signInButton.click();
+    }
+
+    public void goToShippingStep(){
+        proceedToShippingButton.click();
+    }
+
+    public void goToPaymentStep(){
+        confirmBox.click();
+        proceedToCheckoutButton.click();
+
+    }
+
+    public void paymentStep(){
+        payByCheck.click();
+        confirmOrderButton.click();
+    }
+
 }

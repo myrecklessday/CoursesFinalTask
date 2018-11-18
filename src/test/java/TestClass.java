@@ -127,9 +127,30 @@ public class TestClass {
      * E-6 Catalog Test
      */
     @Test(dataProvider = "catalogItemName")
-    public void isChosenItemDisplayedInCatalog(String catalogItem){
+    public void checkChosenItemDisplayInCatalog(String catalogItem){
         mainPage.goToSubMenu("Women", catalogItem);
         Assert.assertTrue(catalogPage.isCatalogItemCorrect(catalogItem), "Correct item should be displayed in catalog");
+    }
+
+    /**
+    * E-7 Proceed To Checkout
+    */
+    @Test(dataProvider = "searchItemName")
+    public void buyItem(String item){
+        mainPage.search(item);
+        Assert.assertTrue(searchResultsPage.isItemFound(), "Item should be found");
+        searchResultsPage.addToCartFirstFoundItem();
+        searchResultsPage.goToCart();
+        shoppingCartPage.proceedToCheckout();
+        shoppingCartPage.signIn("b2c1rsz857@test.com", "12345");
+        shoppingCartPage.goToShippingStep();
+        shoppingCartPage.goToPaymentStep();
+        shoppingCartPage.paymentStep();
+
+
+        int i = 0;
+      //  b2c1rsz857@test.com
+
     }
 
 
@@ -144,9 +165,9 @@ public class TestClass {
     @DataProvider
     public Object[][] searchItemName() {
         return new Object[][]{
-                {"jfjf"},
-                {"Blouse"},
-                {"shirt"},
+//                {"jfjf"},
+//                {"Blouse"},
+//                {"shirt"},
                 {"Dress"}
         };
     }
