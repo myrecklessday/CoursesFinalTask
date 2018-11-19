@@ -8,6 +8,8 @@ import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ShoppingCartPage extends PageBase {
     public ShoppingCartPage(WebDriver driver){
@@ -39,9 +41,6 @@ public class ShoppingCartPage extends PageBase {
    @FindBy(xpath = "//span[text() = 'Proceed to checkout']")
    private WebElement proceedToShippingButton;
 
-   @FindBy()
-   private WebElement proceedToPaymentButton;
-
    @FindBy(id = "cgv")
    private WebElement confirmBox;
 
@@ -51,24 +50,19 @@ public class ShoppingCartPage extends PageBase {
    @FindBy(xpath = "//span[text() = 'I confirm my order']")
    private WebElement confirmOrderButton;
 
+   @FindBy(css = ".box")
+   private WebElement orderResultBox;
+
+   @FindBy(css = ".button-exclusive")
+   private WebElement backToOrdersButton;
+
 
     public String getFirstItemTitleInCart(){
-        if (itemsTitleInCart.size() > 0) {
-            return itemsTitleInCart.get(0).getText();
-        }
-        else {
-            System.out.println("There are no items in the cart");
-        }
-        return "";
+        return itemsTitleInCart.get(0).getText();
     }
 
     public void deleteFirstItem(){
-        if (deleteIcons.size() > 0){
-            deleteIcons.get(0).click();
-        }
-        else {
-            System.out.println("There are no items in the cart");
-        }
+        deleteIcons.get(0).click();
     }
 
     public String getWarningMessage(){
@@ -105,6 +99,20 @@ public class ShoppingCartPage extends PageBase {
     public void paymentStep(){
         payByCheck.click();
         confirmOrderButton.click();
+    }
+
+    public String getOrderReference(){
+        Pattern pattern = Pattern.compile("(?<=\\breference\\s)(\\w+)");
+        String resultBoxText = orderResultBox.getText();
+        Matcher matcher = pattern.matcher(resultBoxText);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return "";
+    }
+
+    public void goBackToOrders(){
+        backToOrdersButton.click();
     }
 
 }

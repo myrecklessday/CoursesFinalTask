@@ -14,8 +14,15 @@ public class MyAccountPage extends PageBase {
     @FindBy(className = "logout")
     private WebElement signOutButton;
 
+    @FindBy(xpath = "//table[@id ='order-list']//tr[contains(@class, 'first_item')]//a[@class = 'color-myaccount']")
+    private WebElement lastOrderReference;
+
     public void signOut(){
         signOutButton.click();
+    }
+
+    public String getLastOrderReference(){
+        return lastOrderReference.getText();
     }
 
 }

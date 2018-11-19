@@ -1,13 +1,11 @@
 import base.MyAssert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import pages.*;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class TestClass {
@@ -146,11 +144,13 @@ public class TestClass {
         shoppingCartPage.goToShippingStep();
         shoppingCartPage.goToPaymentStep();
         shoppingCartPage.paymentStep();
-
-
-        int i = 0;
-      //  b2c1rsz857@test.com
-
+        String successMessage = driver.findElement(By.cssSelector(".alert-success")).getText();
+        Assert.assertTrue(successMessage.contentEquals("Your order on My Store is complete."),
+                "Order should be completed");
+        String orderReference = shoppingCartPage.getOrderReference();
+        shoppingCartPage.goBackToOrders();
+        Assert.assertEquals(myAccountPage.getLastOrderReference(), orderReference, "Order reference should be correct");
+        myAccountPage.signOut();
     }
 
 
@@ -165,9 +165,9 @@ public class TestClass {
     @DataProvider
     public Object[][] searchItemName() {
         return new Object[][]{
-//                {"jfjf"},
-//                {"Blouse"},
-//                {"shirt"},
+                {"jfjf"},
+                {"Blouse"},
+                {"shirt"},
                 {"Dress"}
         };
     }
