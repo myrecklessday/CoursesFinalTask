@@ -50,7 +50,7 @@ public class TestClass {
     /**
      * E-1 Verify that contact us form sends successfully
      */
-    @Test(dataProvider = "getSubjectHeading")
+    @Test(dataProvider = "getSubjectHeading", description = "Verify that contact us form sends successfully")
     public void sendContactUsFormSuccess(String subject) {
         mainPage.goToContactUsPage();
         contactUsPage.fillContactUsForm(subject, "abcde", "Hello! Got the order, thanks!");
@@ -64,7 +64,7 @@ public class TestClass {
     /**
      * E-2 Verify that error message appears if Message area is empty
      */
-    @Test(dataProvider = "getSubjectHeading")
+    @Test(dataProvider = "getSubjectHeading", description = "Verify that error message appears if Message area is empty on contact us form")
     public void sendContactUsFormWithEmptyMessage(String subject){
         mainPage.goToContactUsPage();
         contactUsPage.fillContactUsForm(subject, "abcde", "");
@@ -76,7 +76,7 @@ public class TestClass {
     /**
      * E-3 Verify the ability to register
      */
-    @Test
+    @Test(description = "Verify the ability to register")
     public void register(){
         mainPage.goToSignInPage();
         signInPage.createAnAccount();
@@ -94,7 +94,7 @@ public class TestClass {
     /**
      * E-4 Verify the ability to search items
      */
-    @Test(dataProvider = "searchItemName")
+    @Test(dataProvider = "searchItemName", description = "Verify the ability to search items")
     public void searchItems(String item){
         mainPage.search(item);
         Assert.assertTrue(searchResultsPage.isItemFound(), "Item should be found");
@@ -104,7 +104,7 @@ public class TestClass {
     /**
      * E-5 Verify the ability to add and delete items from cart
      */
-    @Test(dataProvider = "searchItemName")
+    @Test(dataProvider = "searchItemName", description = "Verify the ability to add and delete items from cart")
     public void addDeleteItemsFromCart(String item){
 //        searchItems(item);
         mainPage.search(item);
@@ -124,7 +124,7 @@ public class TestClass {
     /**
      * E-6 Catalog Test
      */
-    @Test(dataProvider = "catalogItemName")
+    @Test(dataProvider = "catalogItemName", description = "Verify the item is correct in Catalog")
     public void checkChosenItemDisplayInCatalog(String catalogItem){
         mainPage.goToSubMenu("Women", catalogItem);
         Assert.assertTrue(catalogPage.isCatalogItemCorrect(catalogItem), "Correct item should be displayed in catalog");
@@ -133,7 +133,7 @@ public class TestClass {
     /**
     * E-7 Proceed To Checkout
     */
-    @Test(dataProvider = "searchItemName")
+    @Test(dataProvider = "searchItemName", description = "Verify that item is in Order history after purchase")
     public void buyItem(String item){
         mainPage.search(item);
         Assert.assertTrue(searchResultsPage.isItemFound(), "Item should be found");

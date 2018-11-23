@@ -2,6 +2,7 @@ package pages;
 
 import base.PageBase;
 import base.Email;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -38,6 +39,7 @@ public class ContactUsPage extends PageBase {
     @FindBy(id = "submitMessage")
     private WebElement sendButton;
 
+    @Step("Fill in 'Contact us' form: subject = {0}, order reference = {1}, message = {2}")
     public void fillContactUsForm(String subject, String orderReference, String message){
         subjectHeadingField.sendKeys(subject);
         emailField.sendKeys(emailRand.getRandEmail());
